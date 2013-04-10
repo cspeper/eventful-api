@@ -157,11 +157,11 @@ rescue LoadError
 end
 
 # The rest of these are part of the standard distribution
-require 'yaml'
 require 'cgi'
 require 'net/http'
 require 'base64'
 require 'digest/md5'
+require 'json'
 
 
 
@@ -179,7 +179,7 @@ module Eventful
   # Default server port
   DEFAULT_PORT = 80 #:nodoc:
   # Default server path
-  DEFAULT_ROOT = '/yaml/' #:nodoc:
+  DEFAULT_ROOT = '/json/' #:nodoc:
 
   # Our POST data boundary
   BOUNDARY = '1E666D29B5E749F6A145BE8A576049E6' #:nodoc:
@@ -339,7 +339,7 @@ module Eventful
 
       response = Net::HTTP.start(@server, @port) do |connection|
         if @http_user and @http_password then
-          connection.post(
+          connection.get(
             "#{@root}#{method}",
             prepare_post(params),
             "Content-type" => "multipart/form-data; boundary=#{BOUNDARY} ",
@@ -357,7 +357,7 @@ module Eventful
       # Raise an exception if we didn't get a 2xx response code
       response.value
 
-      yaml = YAML::load response.body
+      yaml = JSON.parse response.body
 
       # Raise an error if we got an API error
       raise APIError.new(yaml['error']) if yaml['error']
