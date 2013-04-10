@@ -343,12 +343,14 @@ module Eventful
             "#{@root}#{method}",
             prepare_post(params),
             "Content-type" => "multipart/form-data; boundary=#{BOUNDARY} ",
-            "Authorization" => Base64.encode64("#{@http_user}:#{@http_password}"))
+            "Authorization" => Base64.encode64("#{@http_user}:#{@http_password}"),
+            "Accept-Charset" =>  "utf-8")
         else
           connection.post(
             "#{@root}#{method}",
             prepare_post(params),
-            "Content-type" => "multipart/form-data; boundary=#{BOUNDARY} ")
+            "Content-type" => "multipart/form-data; boundary=#{BOUNDARY} ",
+            "Accept-Charset" =>  "utf-8")
         end
       end
 
